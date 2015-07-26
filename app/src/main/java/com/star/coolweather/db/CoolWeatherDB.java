@@ -77,7 +77,32 @@ public class CoolWeatherDB {
             provinceList.add(province);
         }
 
+        if (cursor != null) {
+            cursor.close();
+        }
+
         return provinceList;
+    }
+
+    public String queryProvinceCode(int provinceId) {
+
+        String provinceCode = null;
+
+        Cursor cursor = mSQLiteDatabase.query(CoolWeatherOpenHelper.TABLE_PROVINCE_NAME,
+                null,
+                CoolWeatherOpenHelper.COLUMN_PROVINCE_ID + " = ?",
+                new String[] {provinceId + ""},
+                null, null, null);
+
+        if (cursor.moveToFirst()) {
+            provinceCode = cursor.getString(cursor.getColumnIndex(CoolWeatherOpenHelper.COLUMN_PROVINCE_CODE));
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        return provinceCode;
     }
 
     public void saveCity(City city) {
@@ -119,7 +144,32 @@ public class CoolWeatherDB {
             cityList.add(city);
         }
 
+        if (cursor != null) {
+            cursor.close();
+        }
+
         return cityList;
+    }
+
+    public String queryCityCode(int cityId) {
+
+        String cityCode = null;
+
+        Cursor cursor = mSQLiteDatabase.query(CoolWeatherOpenHelper.TABLE_CITY_NAME,
+                null,
+                CoolWeatherOpenHelper.COLUMN_CITY_ID + " = ?",
+                new String[] {cityId + ""},
+                null, null, null);
+
+        if (cursor.moveToFirst()) {
+            cityCode = cursor.getString(cursor.getColumnIndex(CoolWeatherOpenHelper.COLUMN_CITY_CODE));
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        return cityCode;
     }
 
     public void saveCountry(Country country) {
@@ -161,6 +211,31 @@ public class CoolWeatherDB {
             countryList.add(country);
         }
 
+        if (cursor != null) {
+            cursor.close();
+        }
+
         return countryList;
+    }
+
+    public String queryCountryCode(int countryId) {
+
+        String countryCode = null;
+
+        Cursor cursor = mSQLiteDatabase.query(CoolWeatherOpenHelper.TABLE_COUNTRY_NAME,
+                null,
+                CoolWeatherOpenHelper.COLUMN_COUNTRY_ID + " = ?",
+                new String[] {countryId + ""},
+                null, null, null);
+
+        if (cursor.moveToFirst()) {
+            countryCode = cursor.getString(cursor.getColumnIndex(CoolWeatherOpenHelper.COLUMN_COUNTRY_CODE));
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        return countryCode;
     }
 }
