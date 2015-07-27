@@ -265,6 +265,16 @@ public class ChooseAreaActivity extends AppCompatActivity {
         } else if (mCurrentLevel == LEVEL_CITY) {
             queryProvinces();
         } else {
+            if (getIntent().getBooleanExtra("from_weather_activity", false)) {
+                Intent intent = new Intent(this, WeatherActivity.class);
+
+                SharedPreferences.Editor editor = getSharedPreferences("weather_info",
+                        Context.MODE_PRIVATE).edit();
+
+                editor.putBoolean("city_selected", true).commit();
+
+                startActivity(intent);
+            }
             finish();
         }
     }
