@@ -1,11 +1,16 @@
 package com.star.coolweather.util;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import com.star.coolweather.db.CoolWeatherDB;
 import com.star.coolweather.model.City;
 import com.star.coolweather.model.Country;
 import com.star.coolweather.model.Province;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -14,7 +19,10 @@ import org.xml.sax.SAXException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -263,5 +271,51 @@ public class Utility {
         }
 
         return true;
+    }
+
+    public static void handleWeatherResponse(Context context, String response) {
+
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+
+            JSONObject weatherInfo = jsonObject.getJSONObject("weatherinfo");
+
+            String cityName = weatherInfo.getString("city");
+
+            String cityId = weatherInfo.getString("cityid");
+
+            String temp1 = weatherInfo.getString("temp1");
+            String temp2 = weatherInfo.getString("temp2");
+
+            String weather = weatherInfo.getString("weather");
+
+            String pTime = weatherInfo.getString("ptime");
+
+            saveWeatherInfo(context, cityName, cityId, temp1, temp2, weather, pTime);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void saveWeatherInfo(Context context, String cityName, String cityId,
+                                       String temp1, String temp2, String weather, String pTime) {
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年M月d日", Locale.CHINA);
+
+        SharedPreferences.Editor editor = context.getSharedPreferences("weather_info",
+                Context.MODE_PRIVATE).edit();
+
+        editor
+                .putBoolean("city_selected", true)
+                .putString("city_name", cityName)
+                .putString("city_id", cityId)
+                .putString("temp1", temp1)
+                .putString("temp2", temp2)
+                .putString("weather", weather)
+                .putString("p_time", pTime)
+                .putString("current_date", simpleDateFormat.format(new Date()))
+                .commit();
+
     }
 }

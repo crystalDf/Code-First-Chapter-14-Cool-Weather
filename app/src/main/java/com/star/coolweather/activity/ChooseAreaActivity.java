@@ -2,6 +2,9 @@ package com.star.coolweather.activity;
 
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -53,6 +56,16 @@ public class ChooseAreaActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        SharedPreferences sharedPreferences = getSharedPreferences("weather_info",
+                Context.MODE_PRIVATE);
+
+        if (sharedPreferences.getBoolean("city_selected", false)) {
+            Intent intent = new Intent(this, WeatherActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
         getSupportActionBar().hide();
 
         setContentView(R.layout.choose_area);
@@ -71,12 +84,22 @@ public class ChooseAreaActivity extends AppCompatActivity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mCurrentLevel == LEVEL_PROVINCE) {
-                    mSelectedProvince = mProvinceList.get(position);
-                    queryCities();
-                } else if (mCurrentLevel == LEVEL_CITY) {
-                    mSelectedCity = mCityList.get(position);
-                    queryCountries();
+                switch (mCurrentLevel) {
+                    case LEVEL_PROVINCE:
+                        mSelectedProvince = mProvinceList.get(position);
+                        queryCities();
+                        break;
+                    case LEVEL_CITY:
+                        mSelectedCity = mCityList.get(position);
+                        queryCountries();
+                        break;
+                    case LEVEL_COUNTRY:
+                        String countryCode = mCountryList.get(position).getCode();
+                        Intent intent = new Intent(ChooseAreaActivity.this, WeatherActivity.class);
+                        intent.putExtra("country_code", countryCode);
+                        startActivity(intent);
+                        finish();
+                        break;
                 }
             }
         });
