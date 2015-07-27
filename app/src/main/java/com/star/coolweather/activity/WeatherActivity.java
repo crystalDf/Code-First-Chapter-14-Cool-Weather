@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.star.coolweather.R;
+import com.star.coolweather.service.AutoUpdateService;
 import com.star.coolweather.util.HttpCallbackListener;
 import com.star.coolweather.util.HttpUtil;
 import com.star.coolweather.util.Utility;
@@ -151,6 +152,9 @@ public class WeatherActivity extends AppCompatActivity {
 
         mWeatherLinearLayout.setVisibility(View.VISIBLE);
         mCityNameTextView.setVisibility(View.VISIBLE);
+
+        Intent intent = new Intent(this, AutoUpdateService.class);
+        startService(intent);
 
     }
 }
